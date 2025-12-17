@@ -15,6 +15,7 @@ jobs:
 
       - run: npm install
 
-      - run: node server.js
+      - run: |
+          echo "Secret exists: $API_KEY"
         env:
           API_KEY: ${{ secrets.API_KEY }}

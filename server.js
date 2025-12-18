@@ -1,10 +1,5 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,9 +7,6 @@ const PORT = process.env.PORT || 3000;
 // middleware
 app.use(cors());
 app.use(express.json());
-
-// serve frontend files
-app.use(express.static(path.join(__dirname, "public")));
 
 // ✅ test API endpoint
 app.get("/api/secret-test", (req, res) => {
@@ -25,9 +17,9 @@ app.get("/api/secret-test", (req, res) => {
   });
 });
 
-// SPA fallback (Express 5 safe)
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// optional health check
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
 });
 
 app.listen(PORT, () => {

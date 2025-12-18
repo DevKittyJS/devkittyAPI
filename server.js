@@ -1,26 +1,34 @@
 import express from "express";
+import cors from "cors";
+import fetch from "node-fetch";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static("public"));
+app.use(cors());
+app.use(express.json());
 
-app.get("/api/secret-test", (req, res) => {
-  const apiKey = process.env.API_KEY;
+app.get("/api/icons", async (req, res) => {
+  const API_KEY = process.env.API_KEY;
 
-  console.log("✅ SECRET FROM ENV:", apiKey);
+  try {
+    const ghRes = await fetch(
+      "https://api.github.com/repos/DevKittyJS/API/contents/icons",
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          "User-Agent": "DevKittyBackend"
+        }
+      }
+    );
 
-  if (!apiKey) {
-    return res.status(500).json({ error: "API_KEY not set" });
+    const data = await ghRes.json();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: "GitHub fetch failed" });
   }
-
-  res.json({
-    success: true,
-    message: "Secret is working (check server console)"
-  });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Backend running on port ${PORT}`);
 });
-

@@ -1,4 +1,4 @@
-name: Secret Test
+name: devkittyAPI
 
 on: [push]
 
